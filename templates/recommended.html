@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %} Your Book Recommendations {% endblock %}
+
+{% block main %}
+
+  <!-- Reviews Grid -->
+  <div class="container text-left">
+    <h2>Recommended Books for {{session.username}}:</h2>
+    <hr>
+    {% if author_rec %}
+      <!-- Matching Books go into one grid section-->
+      <h3>More books by <a href="/author_details/{{ author_rec[0][3] }}">{{author_rec[0][3]}}</a>:</h3>
+      <div class="row">
+        {% for book in author_rec %}
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 py-2">
+            <div class="card mb-4 shadow-sm">
+              <a href="/book_details/{{book[0]}}">
+              <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="card-img-top book-cover-L" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+              </a>
+              <div class="card-body">
+                <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+                <a href="/book_details/{{book[0]}}">
+                  <h5 class="card-title">{{ book[2] }}</h5>
+                </a>
+                <a href="/author_details/{{ book[3] }}">
+                  <p class="card-subtitle">{{ book[3] }}</p>
+                </a>
+                <img class="star-rating" src="/static/{{ book[7] }}" alt="star rating">
+                <p class ="num-ratings">  {{ book[5] }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <hr>
+    {% endif %}
+    {% if books_rec %}
+      <!-- Matching Books go into one grid section-->
+      <h3>READ-RATE Members who enjoyed {{hr_book[1]}} also liked:</h3>
+      <div class="row">
+        {% for book in books_rec %}
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 py-2">
+            <div class="card mb-4 shadow-sm">
+              <a href="/book_details/{{book[0]}}">
+              <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="card-img-top book-cover-L" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+              </a>
+              <div class="card-body">
+                <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+                <a href="/book_details/{{book[0]}}">
+                  <h5 class="card-title">{{ book[2] }}</h5>
+                </a>
+                <a href="/author_details/{{ book[3] }}">
+                  <p class="card-subtitle">{{ book[3] }}</p>
+                </a>
+                <img class="star-rating" src="/static/{{ book[7] }}" alt="star rating">
+                <p class ="num-ratings">  {{ book[5] }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if not books_rec and not author_rec %}
+      <!-- Placeholder -->
+      <h3>Here you will find recommended books from users who have enjoyed the same books as you or more books by authors you have reviewed highly! Review a few more books to get more recommendations!</h3>
+    {% endif %}
+  </div>
+{% endblock %}

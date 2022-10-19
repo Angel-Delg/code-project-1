@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}Book Details: {{book[0][2]}} {% endblock %}
+
+{% block main %}
+<!--Book-Details Container-->
+  <div class="container text-left">
+    <div class="row">
+      <div class="col-md-3">
+        <img src="https://covers.openlibrary.org/b/isbn/{{book[0][1]}}-L.jpg?default=false" class="details-book-cover-L" style="width: 100%;" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+      </div>
+      <div class="col-md-9">
+        <img src="https://covers.openlibrary.org/b/isbn/{{book[0][1]}}-L.jpg?default=false" class="details-book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+        <h2 style="padding-top: 0">{{book[0][2]}}</h2>
+        <h4>by <a href="/author_details/{{book[0][3]}}">{{book[0][3]}}</a></h4>
+        <hr>
+        <p><strong><img src="/static/RR_icon.png" style="max-height: 18px;"> R-R Rating: </strong><img class="bdstar-rating" src="/static/{{ book[0][7] }}" style="width: 80px;" alt="star rating"> -  {{book[0][6]}} with {{book[0][5]}} review(s)</p>
+        <p><a href="https://www.goodreads.com/search?q={{book[0][1]}}&qid=qii42wP5UF"><i class="fab fa-goodreads"></i></a><strong>  Goodreads Rating:</strong> {{good_reads[0]}} with {{good_reads[1]}} review(s)</p>
+        <p><strong>Publication Year:</strong> {{book[0][4]}}</p>
+        <p><strong>ISBN:</strong> {{book[0][1]}}</p>
+      </div>
+    </div>
+  </div>
+
+<!-- User own review section -->
+<div class="review container text-left">
+  {% if session.user_id and user_review %}
+    <!-- Display user's own review -->
+    <h4>Your review for {{book[0][2]}}: </h4>
+    <div class="row">
+      <div class="col-md-12">
+        <h5><img class="bdstar-rating" src="/static/{{ user_review[0][5] }}" alt="star rating"> - by <a href="/user_details/{{session.user_id}}">{{ session.username }}</a></h5>
+        <p class="date">Reviewed {{ user_review[0][3] }}</p>
+        <p>{{ user_review[0][2] }}</p>
+        <button class="btn btn-sm btn-primary edit">Edit Your Review</button>
+        <button class="btn btn-sm btn-primary cancel">Cancel Editing</button>
+        <!-- Hidden Review Editing Form unless button is clicked -->
+        <form class="edit_review" action="/edit_review/{{book[0][0]}}" method="POST">
+          <div class="form-group review">
+            <label for="review_text">Review text:</label>
+            <textarea class="form-control" id="review_text" rows="3" name="review_text" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="review_score">Your Rating:</label>
+            <select class="form-control custom-select-sm custom-select" id="review_score" name="review_score" autocomplete="off" required>
+              <option value="" disabled selected>Select Review Score!</option>
+              <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733; - Amazing!</option>
+              <option value="4">&#9733;&#9733;&#9733;&#9733;&#9734; - Loved it!</option>
+              <option value="3">&#9733;&#9733;&#9733;&#9734;&#9734; - Liked it!</option>
+              <option value="2">&#9733;&#9733;&#9734;&#9734;&#9734; - Didn't like it!</option>
+              <option value="1">&#9733;&#9734;&#9734;&#9734;&#9734; - Hated it!</option>
+            </select>
+            <button class="btn btn-sm btn-primary" type="submit">Update Review</button>
+          </div>
+        </form>
+        <form class="edit_review delete" action="/delete/{{book[0][0]}}" method="POST">
+          <button class="btn btn-sm btn-danger" type="submit">Delete Review</button>
+        </form>
+      </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+          // Clicking edit button shows review edit form:
+          $(".edit").on('click', function() {
+            event.preventDefault();
+            $(".edit_review").css("display", "block");
+            $(".cancel").css("display", "inline-block");
+            $(".edit").css("display", "none");
+          })
+
+          // Clicking cancel button hides review edit form:
+          $(".cancel").on('click', function() {
+            event.preventDefault();
+            $(".edit_review").css("display", "none");
+            $(".cancel").css("display", "none");
+            $(".edit").css("display", "inline-block");
+          })
+        })
+    </script>
+  {% elif session.user_id %}
+    <!-- Display review input form -->
+    <h4>Write your own review for {{book[0][2]}}: </h4>
+    <form action="/review/{{book[0][0]}}" method="POST">
+      <div class="form-group review">
+        <label for="review_text">Review text:</label>
+        <textarea class="form-control" id="review_text" rows="3" name="review_text" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="review_score">Your Rating:</label>
+        <select class="form-control custom-select-sm custom-select" id="review_score" name="review_score" autocomplete="off" required>
+          <option value="" disabled selected>Select Review Score!</option>
+          <option value="5">&#9733;&#9733;&#9733;&#9733;&#9733; - Amazing!</option>
+          <option value="4">&#9733;&#9733;&#9733;&#9733;&#9734; - Loved it!</option>
+          <option value="3">&#9733;&#9733;&#9733;&#9734;&#9734; - Liked it!</option>
+          <option value="2">&#9733;&#9733;&#9734;&#9734;&#9734; - Didn't like it!</option>
+          <option value="1">&#9733;&#9734;&#9734;&#9734;&#9734; - Hated it!</option>
+        </select>
+        <button class="btn btn-sm btn-primary ml-auto" type="submit">Submit Review</button>
+      </div>
+    </form>
+  {% else %}
+    <!-- Display info and login/register links-->
+    <h4><a href="/login">Log in</a> to your account or <a href="/register">register</a> for a new account to leave your own review for: {{book[0][2]}}.</h4>
+  {% endif %}
+</div>
+
+<!-- Read-Rate Reviews-->
+<div class="review container text-left">
+  <h2>READ-RATE book reviews: </h2>
+  {% for review in reviews %}
+    <div class="row">
+      <div class="col-md-12">
+        <h5><img class="bdstar-rating" src="/static/{{ review[5] }}" alt="star rating"> - by <a href="/user_details/{{review[0]}}">{{ review[1] }}</a></h5>
+        <p class="date">Reviewed {{ review[3] }}</p>
+        <p>{{ review[2] }}</p>
+      </div>
+    </div>
+    <hr>
+  {% endfor %}
+</div>
+{% endblock %}

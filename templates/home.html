@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block main %}
+  <!--Welcome Container-->
+    <div class="container text-left">
+      <div class="col-md-12">
+        {% if not session.user_id %}
+          <h1>Welcome to READ-RATE!</h1>
+          <p class="lead">READ-RATE is a book review website, where you can rate books you have read, and view reviews by other users.</p>
+          <p class="lead"> To get started, try searching our database for a book by author, title or ISBN:</p>
+          <p class="lead">If you want to write your own reviews and get book recommendations based on your reviews, please <a href ="/login">sign in to your account</a> or <a href="/register"> register for a new account</a>.</p>
+        {% else %}
+          <h1>Welcome back to to READ-RATE, {{session.username}}!</h1>
+          <p class="lead">Get started by searching for a book you have read by title, author or ISBN. Then click on a book to read reviews by other users and leave your own reviews!</p>
+          <p class="lead">Alternatively, select a book to read from the assortment below. Be sure to come back and leave a review once you have read it!</p>
+        {% endif %}
+      </div>
+    </div>
+
+  <!-- Book Cards Grid -->
+  <div class="container text-left">
+    <h2>All-Time Top-Rated Books:</h2>
+    <div class="row">
+      {% for book in top %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 py-2">
+          <div class="card mb-4 shadow-sm">
+            <a href="/book_details/{{book[0]}}">
+            <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="card-img-top book-cover-L" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+            </a>
+            <div class="card-body">
+              <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+              <a href="/book_details/{{book[0]}}">
+                <h5 class="card-title">{{ book[2] }}</h5>
+              </a>
+              <a href="/author_details/{{ book[3] }}">
+                <p class="card-subtitle">{{ book[3] }}</p>
+              </a>
+              <img class="star-rating" src="/static/{{ book[7] }}" alt="star rating">
+              <p class ="num-ratings">  {{ book[5] }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
+    <h2>Explore Books:</h2>
+    <div class="row">
+      {% for book in lucky %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 py-2">
+          <div class="card mb-4 shadow-sm">
+            <a href="/book_details/{{book[0]}}">
+            <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="card-img-top book-cover-L" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+            </a>
+            <div class="card-body">
+              <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+              <a href="/book_details/{{book[0]}}">
+                <h5 class="card-title">{{ book[2] }}</h5>
+              </a>
+              <a href="/author_details/{{ book[3] }}">
+                <p class="card-subtitle">{{ book[3] }}</p>
+              </a>
+              <img class="star-rating" src="/static/{{ book[7] }}" alt="star rating">
+              <p class ="num-ratings">  {{ book[5] }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
+    <h2>Explore Authors -<br> <a href="/author_details/{{author[0][3]}}">Books by {{author[0][3]}}</a>:</h2>
+    <div class="row">
+      {% for book in author %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 py-2">
+          <div class="card mb-4 shadow-sm">
+            <a href="/book_details/{{book[0]}}">
+            <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="card-img-top book-cover-L" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+            </a>
+            <div class="card-body">
+              <img src="https://covers.openlibrary.org/b/isbn/{{book[1]}}-L.jpg?default=false" class="book-cover-S" alt="Book Cover Art" onerror="this.onerror=null;this.src='/static/default_cover.jpg';">
+              <a href="/book_details/{{book[0]}}">
+                <h5 class="card-title">{{ book[2] }}</h5>
+              </a>
+              <a href="/author_details/{{ book[3] }}">
+                <p class="card-subtitle">{{ book[3] }}</p>
+              </a>
+              <img class="star-rating" src="/static/{{ book[7] }}" alt="star rating">
+              <p class ="num-ratings">  {{ book[5] }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <hr>
+  </div>
+{% endblock %}
